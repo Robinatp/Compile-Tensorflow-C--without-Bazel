@@ -1,0 +1,16 @@
+GCC C++ Compiler
+/home/ubuntu/eclipse-workspace-cpp/tensorflow_include/include
+/home/ubuntu/eclipse-workspace-cpp/tensorflow_include/include/third_party
+
+-std=c++11
+
+
+GCC C++ Linker
+tensorflow_cc
+opencv_core
+opencv_imgcodecs
+opencv_highgui
+opencv_imgproc
+opencv_ml
+
+/home/ubuntu/eclipse-workspace-cpp/tensorflow_include/lib
