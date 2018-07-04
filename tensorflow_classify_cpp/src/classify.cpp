@@ -2,19 +2,10 @@
 
 
 
-int classify_pb_init(std::unique_ptr<tensorflow::Session>  &session)
+int classify_pb_init(std::unique_ptr<tensorflow::Session>  &session,string graph)
 {
 
-  // These are the command-line flags the program can understand.
-  // They define where the graph and input data is located, and what kind of
-  // input the model expects. If you train your own model, or use something
-  // other than inception_v3, then you'll need to update these.
-  string image =
-		  "/home/ubuntu/eclipse-workspace-cpp/tensorflow_demo/data/construction_workers_images/001300.jpg";
-  string graph =
-		  "/home/ubuntu/eclipse-workspace/facenet/tensorflow_cpp/data/inception_v3_2016_08_28_frozen.pb";
-  string labels =
-		  "/home/ubuntu/eclipse-workspace/facenet/tensorflow_cpp/data/imagenet_slim_labels.txt";
+
   string root_dir = "";
 
   // First we load and initialize the model.

@@ -13,6 +13,18 @@
 
 int main( int argc, char** argv )
 {
+
+
+
+  // These are the command-line flags the program can understand.
+  // They define where the graph and input data is located, and what kind of
+  // input the model expects. If you train your own model, or use something
+  // other than inception_v3, then you'll need to update these.
+  string graph = "/home/ubuntu/eclipse-workspace/facenet/tensorflow_cpp/data/inception_v3_2016_08_28_frozen.pb";
+  string labels = "/home/ubuntu/eclipse-workspace/facenet/tensorflow_cpp/data/imagenet_slim_labels.txt";
+  string input_layer = "input";
+  string output_layer = "InceptionV3/Predictions/Reshape_1";
+
   Mat cv_image;
   namedWindow( "Display Image", WINDOW_AUTOSIZE );
   //cv_image = imread("/home/ubuntu/eclipse-workspace-cpp/tensorflow_demo/data/construction_workers_images/001300.jpg");
@@ -22,17 +34,13 @@ int main( int argc, char** argv )
 
   std::unique_ptr<tensorflow::Session>  session;
 
-  if( classify_pb_init(session) <0){
+  if( classify_pb_init(session,graph) <0){
 	  LOG(ERROR) << "graph init faile";
 	  return -1;
   }
 
-  string labels = "/home/ubuntu/eclipse-workspace/facenet/tensorflow_cpp/data/imagenet_slim_labels.txt";
-  string input_layer = "input";
-  string output_layer = "InceptionV3/Predictions/Reshape_1";
 
-
-  //
+  //method for convert Mat to Tensor
   tensorflow::Tensor image_tensor(tensorflow::DT_FLOAT, tensorflow::TensorShape({1, INPUT_HEIGHT, INPUT_WIDTH, 3}));
   ReadTensorFromImageFile_by_opencv("/home/ubuntu/eclipse-workspace-cpp/tensorflow-cpp/data/grace_hopper.jpg",
 		  INPUT_HEIGHT,INPUT_WIDTH,

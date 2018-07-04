@@ -83,7 +83,7 @@ using tensorflow::int32;
 #define INPUT_HEIGHT (299)
 
 
-int classify_pb_init(std::unique_ptr<tensorflow::Session>  &session);
+int classify_pb_init(std::unique_ptr<tensorflow::Session>  &session,string graph);
 
 void convertotensor(Mat input,tensorflow::Tensor &image_tensor,Size size);
 
