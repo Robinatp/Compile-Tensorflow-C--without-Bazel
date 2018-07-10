@@ -45,21 +45,35 @@ void convertotensor(Mat input,tensorflow::Tensor &image_tensor,Size size){
 	}
 }
 
+void img_to_tensor(cv::Mat& input, tensorflow::Tensor& input_tensor) {
+        cv::resize(input, input, cv::Size(IMG_SIZE, IMG_SIZE), 0, 0, cv::INTER_LINEAR);
+        cv::cvtColor(input, input, cv::COLOR_BGR2RGB);
+
+        auto input_tensor_mapped = input_tensor.tensor<float, 4>();
+
+        for(int y = 0; y < input.size().height; y++) {
+            for(int x = 0; x < input.size().width; x++) {
+                for(int c = 0; c < 3; c++) {
+                    input_tensor_mapped(0, y, x, c) = (unsigned char)input.at<cv::Vec3b>(y, x)[c] / 255.0 * 2.0 - 1.0;// attention the process
+                }
+            }
+        }
+    }
 
 Status MatToTensorOfUint8_1(Mat input , const int input_height,
 		const int input_width, const float input_mean,
 		const float input_std, tensorflow::Tensor &out_tensors) {
-	// resize
-	resize(input, input, Size(input_height, input_width));
-	// color convert
-	cvtColor(input, input, COLOR_BGR2RGB);
+    // resize
+    resize(input, input, Size(input_height, input_width));
+    // color convert
+    cvtColor(input, input, COLOR_BGR2RGB);
 
     //tensorflow::Tensor imgTensorWithSharedData(tensorflow::DT_UINT8, {1, input_height, input_width, input->channels()});
     uint8_t *p = out_tensors.flat<uint8_t>().data();
     Mat outputImg(input_width, input_mean, CV_8UC3, p);
     input.convertTo(outputImg, CV_8UC3);
 
-	return Status::OK();
+    return Status::OK();
 }
 
 
@@ -132,16 +146,16 @@ Status MatToTensorOfFloat_3(Mat input , const int input_height,
 	  const uchar* source_data = input.data;
 	  //Copy all the data over
 	  for (int y = 0; y < INPUT_HEIGHT; ++y) {
-	  		const uchar* source_row = source_data + (y * INPUT_WIDTH * 3);
-	  		for (int x = 0; x < INPUT_WIDTH; ++x) {
-	  			const uchar* source_pixel = source_row + (x * 3);
-	  			for (int c = 0; c < 3; ++c) {
-	  				const uchar* source_value = source_pixel + c;
-	  				input_tensor_mapped(0, y, x, c) = (*source_value-input_mean)*1.0/input_std;
-	  			    //std::cout <<"input_tensor_mapped:"<<  input_tensor_mapped(0, y, x, c) << std::endl;
-	  			}
+	  	const uchar* source_row = source_data + (y * INPUT_WIDTH * 3);
+	  	for (int x = 0; x < INPUT_WIDTH; ++x) {
+	  		const uchar* source_pixel = source_row + (x * 3);
+	  		for (int c = 0; c < 3; ++c) {
+	  			const uchar* source_value = source_pixel + c;
+	  			input_tensor_mapped(0, y, x, c) = (*source_value-input_mean)*1.0/input_std;
+	  			//std::cout <<"input_tensor_mapped:"<<  input_tensor_mapped(0, y, x, c) << std::endl;
 	  		}
 	  	}
+	  }
 
 	return Status::OK();
 }
